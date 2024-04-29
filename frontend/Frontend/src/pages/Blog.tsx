@@ -1,7 +1,7 @@
  
 import { Appbar } from "../components/Appbar";
 import { Avatar } from "../components/BlogCard";
-import { BlogSkeleton } from "../components/BlogSkeletons";
+import { ViewBlogSkelaton } from "../components/BlogSkeletons";
 import { ViewBlog } from "../components/ViiewBlog";
 import { useBlog } from "../hooks";
 
@@ -11,9 +11,8 @@ export function Blog(){
  console.log("id of blog: "+localStorage.getItem('id'));
  return <div>
          <Appbar name={localStorage.getItem('name')} /> 
- {loading || !blog?(<div className=" flex justify-center flex-col w-3/4 items-center">
-  <BlogSkeleton />
-  <BlogSkeleton />
+ {loading || !blog?(<div>
+  <ViewBlogSkelaton /> 
  </div>):(<div>
  <ViewBlog blog={blog}/>
  </div>)}

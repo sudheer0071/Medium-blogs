@@ -1,14 +1,18 @@
 import axios from "axios"
-import { Appbar } from "../components/Appbar"
-import { BACKEND_URL } from "../config"
+import { Appbar } from "../components/Appbar" 
 import { ChangeEvent, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 export const Publish = () =>{
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
+  const [popup, setPopup] = useState("")
+  const [isOpen, setIsopen] = useState(false) 
   const navigate = useNavigate()
   return <div className="  "> 
+  <div className="flex justify-center">
+  <div className={`popup ${isOpen ? 'active' : 'hide'} ${popup.includes('feilds') || popup.includes('found')||popup.includes('wrong')||popup.includes('already')?'bg-red-400 p-2 h-16': ''} text-center w-80 shadow-lg bg-green-500 rounded-lg ml-10 font-medium text-lg fixed top-4 h-11 p-1`}>{popup}</div>
+  </div>
   <Appbar name={localStorage.getItem('name')} />
   <div className=" flex justify-center w-full">
     <div className=" max-w-sm md:max-w-screen-sm w-full lg:max-w-screen-lg sm:max-w-screen-sm">
@@ -24,17 +28,26 @@ export const Publish = () =>{
     <TextEditor onchange={(e)=>{
       setContent(e.target.value)
     }}/>
-    <button onClick={async () => {  
-      console.log(localStorage.getItem('token'));
-       
-      const response = await axios.post(`https://backend.sam7655677280.workers.dev/api/v1/blogs`,{
-        title:title, content:content
-      },{
-         headers:{
-          authorizaton:localStorage.getItem('token')
-         }
-      })
-      navigate(`/blog/${response.data.id}`)
+    <button onClick={async () => {   
+      if (title==''||content=='') {
+        console.log("emptyy"); 
+        setTimeout(() => {
+          setIsopen(false),
+          setPopup('')
+        }, 2000);
+        setIsopen(true),
+        setPopup('Please enter all feilds') 
+      }
+      else{
+        const response = await axios.post(`https://backend.sam7655677280.workers.dev/api/v1/blogs`,{
+          title:title, content:content
+        },{
+           headers:{
+            authorization:localStorage.getItem('token')
+           }
+        })
+        navigate(`/blog/${response.data.id}`)
+      }
      }} type="submit" className="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-600 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-300 hover:bg-blue-800">
          Publish post
      </button>
