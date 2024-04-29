@@ -13,13 +13,14 @@ interface BlogCardProps{
 
 export const BlogCard = ({authorName,title,content,publishDate,id}:BlogCardProps) =>{
   console.log("authorname: "+authorName); 
+  console.log(localStorage.getItem('token'));
   
   return <Link to={`/blog/${id}`}>
     <div className=" flex">
   <div className=" w-full py-4 cursor-pointer" onClick={()=> localStorage.setItem('id',id)}>
     <div className="flex justify-start">
     <div>
-     <Avatar size={5} name='j'/> {authorName}  
+     <Avatar size={5} name={authorName|| 'Annoymous'}/> {authorName}  
     </div>
     <div className=" flex justify-center flex-col pl-2">
        <div className=" w-1 h-1 rounded-full bg-slate-500">

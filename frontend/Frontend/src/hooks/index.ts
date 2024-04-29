@@ -25,8 +25,7 @@ export const useBlog = ({id}:{ id:string }) =>{
     .then(response => {
       setBlog(response.data.blog);
       setLoading(false)
-      console.log('data blog: '+response.data.blog);
-      
+      console.log('data blog: '+response.data.blog); 
     })
   },[id])
   return {
@@ -47,9 +46,7 @@ export const  useBlogs = ()=>{
     })
     .then(response => {
       setBlogs(response.data.blogs);
-      setLoading(false)
-      console.log('data: '+response.data.blogs);
-      
+      setLoading(false) 
     })
   },[])
   return {

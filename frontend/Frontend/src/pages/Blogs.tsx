@@ -8,8 +8,9 @@ export function Blogs(){
   // store it in state
   // stor it directly here
   const {loading, blogs} = useBlogs()
-  return <div className=" px-4"> 
+  return <div>
          <Appbar name={localStorage.getItem('name')} /> 
+   <div className=" px-6"> 
     {loading?
        (  <div className=" flex justify-center">
           <div className="max-w-sm md:max-w-screen-sm w-full lg:max-w-screen-lg sm:max-w-screen-sm">  
@@ -38,5 +39,6 @@ export function Blogs(){
        </div>
        </div>
      </div>)}
+  </div>
   </div>
    }
