@@ -11,7 +11,7 @@ export function Blog(){
  console.log("id of blog: "+localStorage.getItem('id'));
  return <div>
          <Appbar name={localStorage.getItem('name')} /> 
- {loading?(<div className=" flex justify-center flex-col w-3/4 items-center">
+ {loading || !blog?(<div className=" flex justify-center flex-col w-3/4 items-center">
   <BlogSkeleton />
   <BlogSkeleton />
  </div>):(<div>
