@@ -8,7 +8,7 @@ import { Loader } from "./Loader";
 export const Auth = ({type}:{type:"signup"| "signin"}) =>{
   const [popup, setPopup] = useState("")
   const [isOpen, setIsopen] = useState(false) 
-const [loader, setLoader] = useState(true)
+const [loader, setLoader] = useState(false)
 
   const [postInputs, setPostInputs] = useState<signupInput>({
     name:'',
@@ -63,9 +63,11 @@ const navigate = useNavigate()
   }
  return <div className="">
   <div>
+    <div className=" flex justify-center">
       <Medium/>
+    </div>
       <div className=" flex justify-center">
-      <div className={`popup ${isOpen ? 'active' : 'hide'} ${popup.includes('feilds') || popup.includes('found')||popup.includes('wrong')||popup.includes('already')?'bg-red-400 p-2 h-16': ''} flex justify-center text-center w-80 shadow-lg bg-green-500 rounded-lg ml-10 font-medium text-lg fixed top-4 h-11 p-1`}>{popup}</div>
+      <div className={`popup ${isOpen ? 'active' : 'hide'} ${popup.includes('feilds') || popup.includes('found')||popup.includes('wrong')||popup.includes('already')?'bg-red-400 p-2 h-16': ''} flex justify-center text-center w-80 shadow-slate-500 shadow-lg bg-green-500 rounded-lg font-medium text-lg fixed top-4 h-11 p-1`}>{popup}</div>
       </div>
     </div>
   <div className=" mt-32 flex justify-center flex-col overflow-y-hidden"> 
