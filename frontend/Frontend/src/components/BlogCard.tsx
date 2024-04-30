@@ -11,15 +11,13 @@ interface BlogCardProps{
   id:string
 }
 
-export const BlogCard = ({authorName,title,content,publishDate,id}:BlogCardProps) =>{
-  console.log("authorname: "+authorName); 
-  console.log(localStorage.getItem('token'));
+export const BlogCard = ({authorName,title,content,publishDate,id}:BlogCardProps) =>{ 
   
   return <Link to={`/blog/${id}`}>
     <div className=" flex">
   <div className=" w-full py-4 cursor-pointer" onClick={()=> localStorage.setItem('id',id)}>
     <div className="flex justify-start">
-    <div>
+    <div className="">
      <Avatar size={5} name={authorName|| 'Annoymous'}/> {authorName}  
     </div>
     <div className=" flex justify-center flex-col pl-2">

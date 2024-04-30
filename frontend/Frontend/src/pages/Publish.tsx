@@ -11,7 +11,7 @@ export const Publish = () =>{
   const navigate = useNavigate()
   return <div className="  "> 
   <div className="flex justify-center">
-  <div className={`popup ${isOpen ? 'active' : 'hide'} ${popup.includes('feilds') || popup.includes('found')||popup.includes('wrong')||popup.includes('already')?'bg-red-400 p-2 h-16': ''} text-center w-80 shadow-lg bg-green-500 rounded-lg ml-10 font-medium text-lg fixed top-4 h-11 p-1`}>{popup}</div>
+  <div className={`popup ${isOpen ? 'active' : 'hide'} ${popup.includes('feilds') || popup.includes('found')||popup.includes('wrong')||popup.includes('already')?'bg-red-400 p-2 h-10': ''} flex justify-center text-center w-80 shadow-slate-500 shadow-lg bg-green-500 rounded-lg font-medium text-lg fixed top-4 h-11 p-1`}>{popup}</div>
   </div>
   <Appbar name={localStorage.getItem('name')} />
   <div className=" flex justify-center w-full">

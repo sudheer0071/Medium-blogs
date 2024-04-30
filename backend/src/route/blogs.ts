@@ -97,6 +97,14 @@ const blogs = await prisma.blog.findMany({
     }
   }
 });
+
+blogs.forEach((blog:any) => {
+  blog.date = new Date(blog.date).toLocaleDateString('en-US', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric'
+  });
+});
 return c.json({blogs:blogs}) 
 })
 
