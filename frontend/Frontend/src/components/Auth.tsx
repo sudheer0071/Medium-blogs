@@ -8,7 +8,7 @@ import { Loader } from "./Loader";
 export const Auth = ({type}:{type:"signup"| "signin"}) =>{
   const [popup, setPopup] = useState("")
   const [isOpen, setIsopen] = useState(false) 
-const [loader, setLoader] = useState(false)
+const [loader, setLoader] = useState(true)
 
   const [postInputs, setPostInputs] = useState<signupInput>({
     name:'',
@@ -61,18 +61,20 @@ const navigate = useNavigate()
       }
       }  
   }
- return <div>
+ return <div className="">
   <div>
       <Medium/>
+      <div className=" flex justify-center">
       <div className={`popup ${isOpen ? 'active' : 'hide'} ${popup.includes('feilds') || popup.includes('found')||popup.includes('wrong')||popup.includes('already')?'bg-red-400 p-2 h-16': ''} flex justify-center text-center w-80 shadow-lg bg-green-500 rounded-lg ml-10 font-medium text-lg fixed top-4 h-11 p-1`}>{popup}</div>
+      </div>
     </div>
-  <div className=" h-screen flex justify-center flex-col"> 
+  <div className=" mt-32 flex justify-center flex-col overflow-y-hidden"> 
 <div className="flex justify-center">
   <div>
  <div className=" text-3xl font-bold text-center">
  Create an account <br /><br />
  </div>
- <div className=" w-96">
+ <div className=" w-80 sm:w-96">
   {type=='signup'?
   <InputBox onChange={(e)=>{setPostInputs({
     ...postInputs,
