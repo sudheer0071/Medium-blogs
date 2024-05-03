@@ -1,14 +1,45 @@
 import axios from "axios"
 import { Appbar } from "../components/Appbar" 
-import { ChangeEvent, useState } from "react"
+import { ChangeEvent, FormEvent, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { BACKEND_URL } from "../config"
 
 export const Publish = () =>{
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const [popup, setPopup] = useState("")
   const [isOpen, setIsopen] = useState(false) 
+  const [file, setFile] = useState<File | null>(null)
   const navigate = useNavigate()
+
+
+  const handleFileChange = (event:ChangeEvent<HTMLInputElement>)=>{
+    if(event.target.files){
+      setFile(event.target.files[0])
+    }
+  }
+
+  const photoUpload = async (event:FormEvent<HTMLFormElement>)=>{ 
+    event.preventDefault()
+    if (!file) {
+      console.error("no file selected");
+      return
+    }
+    const formData = new FormData()
+    
+    formData.append('file',file)
+    console.log("formdata: "+formData);
+      const response = await axios.post(`${BACKEND_URL}/api/v1/blogs/upload`,{ 
+        formData
+      },{
+        headers:{
+          "Content-Type":"multipart/form-data",
+          authorization:localStorage.getItem('token')
+        }
+      })
+      console.log("response: "+response.data); 
+  }
+
   return <div className="  "> 
   <div className="flex justify-center">
   <div className={`popup ${isOpen ? 'active' : 'hide'} ${popup.includes('feilds') || popup.includes('found')||popup.includes('wrong')||popup.includes('already')?'bg-red-400 p-2 h-10': ''} flex justify-center text-center w-80 shadow-slate-500 shadow-lg bg-green-500 rounded-lg font-medium text-lg fixed top-4 h-11 p-1`}>{popup}</div>
@@ -20,37 +51,51 @@ export const Publish = () =>{
 <input onChange={(e)=>{
   setTitle(e.target.value)
 }} type="email" id="helper-text" aria-describedby="helper-text-explanation" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5    dark:placeholder-gray-400 font-medium dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Title" />
- 
     </div>
   </div>
   <div className=" flex justify-center w-full pt-12">
   <div className=" max-w-sm md:max-w-screen-sm w-full lg:max-w-screen-lg sm:max-w-screen-sm">
     <TextEditor onchange={(e)=>{
       setContent(e.target.value)
-    }}/>
-    <button onClick={async () => {   
-      if (title==''||content=='') {
-        console.log("emptyy"); 
-        setTimeout(() => {
-          setIsopen(false),
-          setPopup('')
-        }, 2000);
-        setIsopen(true),
-        setPopup('Please enter all feilds') 
-      }
-      else{
-        const response = await axios.post(`https://backend.sam7655677280.workers.dev/api/v1/blogs`,{
-          title:title, content:content
-        },{
-           headers:{
-            authorization:localStorage.getItem('token')
-           }
-        })
-        navigate(`/blog/${response.data.id}`)
-      }
-     }} type="submit" className="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-600 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-300 hover:bg-blue-800">
+    }}/> 
+      <form onSubmit={photoUpload}>
+        <input type="file" id="myFile" name="filename"  onChange={handleFileChange}  />
+        <button type="submit">Upload</button>
+      </form>
+    {/* <button onClick={async () => {   
+      photoUpload()
+      // if (title==''||content=='') {
+      //   console.log("emptyy"); 
+      //   setTimeout(() => {
+      //     setIsopen(false),
+      //     setPopup('')
+      //   }, 2000);
+      //   setIsopen(true),
+      //   setPopup('Please enter all feilds') 
+      // }
+      // else{
+      //   const response = await axios.post(`${BACKEND_URL}/api/v1/blogs`,{
+      //     title:title, content:content
+      //   },{
+      //     headers:{ 
+      //       authorization:localStorage.getItem('token')
+      //     }
+      //   })
+      //   photoUpload()
+      //   setTimeout(() => {
+      //     setIsopen(false),
+      //     setPopup('')
+      //     localStorage.setItem('id',response.data.blog.id)
+      //     navigate(`/blog/${response.data.blog.id}/`)
+      //     console.log("id: "+response.data.blog.id);
+          
+      //   }, 2000);
+      //   setIsopen(true),
+      //   setPopup(response.data.message) 
+      // }
+    }} type="submit" className="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-600 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-300 hover:bg-blue-800">
          Publish post
-     </button>
+     </button> */}
   </div>
   </div>
 

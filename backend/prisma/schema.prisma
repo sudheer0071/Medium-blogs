@@ -29,5 +29,8 @@ model Blog {
   date      DateTime
   author      User?   @relation(fields: [authorId], references: [id])
   authorId    String?
+  imageType String
+  imageName String
+  imageData Bytes 
 }
 

@@ -12,8 +12,8 @@ export const BlogSkeleton = () =>{
     </div>
     </div>
     <div className=" text-2xl ">
-    <div className=" h-5 bg-gray-200 rounded-full  mb-4"></div>
-    <div className=" h-5 bg-gray-200 rounded-full w-48 mb-4"></div>
+    <div className=" h-5 bg-gray-200 rounded-sm  mb-4"></div>
+    <div className=" h-5 bg-gray-200 rounded-sm w-48 mb-4"></div>
     </div>
     <div className="text-xl">
   <div className="h-2.5 bg-gray-200 rounded-full  mb-4"></div>
@@ -45,8 +45,8 @@ export const ViewBlogSkelaton = ()=>{
   <div className=" grid grid-cols-12 px-10 pt-12 w-full max-w-screen-xl">
     <div className=" col-span-full sm:col-span-8">
     <div className=" text-4xl font-bold sm:text-5xl">
-    <div className=" h-8 bg-gray-200 rounded-full  mb-4"></div>
-    <div className=" h-8 bg-gray-200 rounded-full w-48 mb-4"></div>
+    <div className=" h-8 bg-gray-200 rounded-md  mb-4"></div>
+    <div className=" h-8 bg-gray-200 rounded-md w-48 mb-4"></div>
     </div>
     <div className=" font-medium text-slate-400 pt-2">
     <div className="h-2 bg-gray-200 rounded-full w-48 sm:w-96 mb-4"></div> 

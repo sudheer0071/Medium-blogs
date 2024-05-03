@@ -6,7 +6,8 @@ import {decode, sign, verify} from 'hono/jwt'
 const blogRouter = new Hono<{
   Bindings:{
     DATABASE_URL:string,
-    JWT_SECRET:string
+    JWT_SECRET:string,
+    HONO_R2_UPLOAD:R2Bucket
   },
   Variables:{
     userId:string
@@ -32,7 +33,6 @@ blogRouter.use('/*',async(c,next)=>{
   } catch (error) {
     c.status(403)
     return c.json({message:"unauthorized"})
-    
   }
 })
 
@@ -41,17 +41,24 @@ blogRouter.post('/', async (c) => {
     datasourceUrl: c.env.DATABASE_URL,
 }).$extends(withAccelerate())
 
-const body = await c.req.json()  
+const body = await c.req.json()   
 const authorId = c.get("userId")
 try {
+  const photo = await c.req.parseBody()
+  console.log(photo['file']);
+  
   const blog = await prisma.blog.create({
    data:{
      title:body.title,
      content:body.content, 
      date: new Date(),
-     authorId
-   }
+     authorId,
+     imageType:'mintype',
+     imageName:'check',
+     imageData:"photo['file'] "
+    }
   })
+ 
 
  return c.json({message:`Blog is created`,blog})
  
@@ -131,6 +138,14 @@ try {
       }
     } 
    })
+  //  if (blog) {
+  //   blog.date = new Date(blog.date).toLocaleDateString('en-US', {
+  //     day: 'numeric',
+  //     month: 'short',
+  //     year: 'numeric'
+  //   });
+  // }
+  
   return c.json({blog:blog})
 } catch (error) {
   c.status(411)
@@ -140,5 +155,18 @@ try {
 }
 })  
 
+blogRouter.post('/upload',async(c)=>{
+  console.log("author id: "+c.get('userId'));
+  
+  const photo = await c.req.parseBody()
+  const file = photo['formData'] 
+  console.log("Files "+file);
+  
+  if (file && file instanceof File){
+    console.log("Uploading file to R2"); 
+  }
+  
+ return c.json({message:photo})
+})
  
 export {blogRouter}
