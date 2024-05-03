@@ -9,9 +9,11 @@ interface BlogCardProps{
   content:string,
   publishDate:any,
   id:string
+  updatedOn?:any
 }
 
-export const BlogCard = ({authorName,title,content,publishDate,id}:BlogCardProps) =>{ 
+export const BlogCard = ({authorName,title,content,publishDate,id,updatedOn}:BlogCardProps) =>{ 
+  console.log("updated on: "+typeof(updatedOn));
   
   return <Link to={`/blog/${id}`}>
     <div className=" flex">
@@ -26,7 +28,8 @@ export const BlogCard = ({authorName,title,content,publishDate,id}:BlogCardProps
        </div>
     </div>
     <div className=" pl-2 font-thin text-slate-500">
-      {publishDate}
+      
+      {updatedOn!='Jan 1, 1970'?'Updated On '+updatedOn:publishDate}
     </div>
     </div>
     <div className=" text-md font-extrabold sm:font-bold pt-2 max-w-sm md:max-w-screen-sm w-full lg:max-w-screen-lg sm:max-w-screen-sm sm:text-2xl md:text-2xl lg:text-2xl ">

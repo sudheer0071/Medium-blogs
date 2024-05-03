@@ -28,9 +28,7 @@ model Blog {
   published Boolean @default(false)
   date      DateTime
   author      User?   @relation(fields: [authorId], references: [id])
-  authorId    String?
-  imageType String
-  imageName String
-  imageData Bytes 
+  authorId    String? 
+  updatedOn  DateTime?
 }
 

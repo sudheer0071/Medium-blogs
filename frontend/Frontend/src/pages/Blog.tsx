@@ -10,7 +10,7 @@ export function Blog(){
  const {loading, blog} = useBlog({id:localStorage.getItem('id')||''})  
  console.log("id of blog: "+localStorage.getItem('id'));
  return <div>
-         <Appbar name={localStorage.getItem('name')} /> 
+         <Appbar name={localStorage.getItem('name')} write={true} /> 
  {loading || !blog?(<div>
   <ViewBlogSkelaton /> 
  </div>):(<div>

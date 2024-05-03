@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { Prisma, PrismaClient } from '@prisma/client/edge'
 import { withAccelerate } from '@prisma/extension-accelerate'
 import {decode, sign, verify} from 'hono/jwt'
+import {format} from 'date-fns'
 
 const blogRouter = new Hono<{
   Bindings:{
@@ -12,9 +13,7 @@ const blogRouter = new Hono<{
   Variables:{
     userId:string
   }
-}>()
-
-
+}>() 
 blogRouter.use('/*',async(c,next)=>{
   // get the header
   // verify the header
@@ -52,10 +51,7 @@ try {
      title:body.title,
      content:body.content, 
      date: new Date(),
-     authorId,
-     imageType:'mintype',
-     imageName:'check',
-     imageData:"photo['file'] "
+     authorId
     }
   })
  
@@ -79,6 +75,7 @@ const body = await c.req.json()
       id:body.id
     },
     data:{
+      updatedOn:new Date(),
       title:body.title,
       content:body.content, 
     }
@@ -97,6 +94,7 @@ const blogs = await prisma.blog.findMany({
     content:true,
     id:true,
     date:true,
+    updatedOn:true,
     author:{
       select:{
         name:true
@@ -111,7 +109,13 @@ blogs.forEach((blog:any) => {
     month: 'short',
     year: 'numeric'
   });
-});
+  blog.updatedOn = new Date(blog.updatedOn).toLocaleDateString('en-Us',{
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric'
+  })
+}); 
+
 return c.json({blogs:blogs}) 
 })
 
@@ -131,22 +135,67 @@ try {
       title:true, 
       content:true,
       date:true,
+      updatedOn:true,
       author:{
         select:{
           name:true
         }
       }
     } 
-   })
-  //  if (blog) {
-  //   blog.date = new Date(blog.date).toLocaleDateString('en-US', {
-  //     day: 'numeric',
-  //     month: 'short',
-  //     year: 'numeric'
-  //   });
-  // }
-  
-  return c.json({blog:blog})
+   }) 
+   if (!blog) {
+    return c.json({message:'Blog Not Found'})
+   }
+ 
+   const formatDate = (date:any)=>{
+    if (!date) return ''
+    return new Date(date).toLocaleDateString('en-Us',{
+      day:'numeric',
+      month:'short',
+      year:'numeric'
+     })
+   }
+
+   const date = formatDate(blog.date)
+   const updatedOn = formatDate(blog?.updatedOn)
+   console.log('updated on '+updatedOn);
+   
+        const formateblog = {...blog, date, updatedOn}
+        return c.json({blog:formateblog}) 
+
+  //  console.log("blog updated "+blog?.updatedOn);
+  //  if (blog?.updatedOn==null) {
+
+  //    if (blog?.date) {
+  //      const formateDate = new Date(blog?.date).toLocaleDateString('en-Us',{
+  //       day:'numeric',
+  //       month:'short',
+  //       year:'numeric'
+  //      })
+       
+       
+  //      const formateblog = {...blog, date:formateDate}
+  //      return c.json({blog:formateblog}) 
+  //  }}
+  //  else{ 
+  //   if (blog?.date && blog.updatedOn) {
+  //     const formateDate = new Date(blog?.date).toLocaleDateString('en-Us',{
+  //      day:'numeric',
+  //      month:'short',
+  //      year:'numeric'
+  //     })
+        
+  //     const updatedOn = new Date(blog?.updatedOn).toLocaleDateString('en-Us',{
+  //      day:'numeric',
+  //      month:'short',
+  //      year:'numeric'
+  //     })
+      
+      
+  //     const formateblog = {...blog, date:formateDate, updatedOn}
+  //     return c.json({blog:formateblog}) 
+  //  }
+  //   }
 } catch (error) {
   c.status(411)
   return c.json({

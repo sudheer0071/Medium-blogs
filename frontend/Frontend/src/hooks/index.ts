@@ -11,6 +11,7 @@ import { BACKEND_URL } from "../config";
     author: {
         name:string
     }
+    updatedOn?:any
   }
 export const useBlog = ({id}:{ id:string }) =>{
   const [loading, setLoading]= useState(true)

@@ -9,14 +9,14 @@ export function Blogs(){
   // stor it directly here
   const {loading, blogs} = useBlogs()
   return <div>
-         <Appbar name={localStorage.getItem('name')} /> 
+         <Appbar name={localStorage.getItem('name')} write={true} /> 
    <div className=" px-6"> 
     {loading?
        (  <div className=" flex justify-center">
-          <div className="max-w-sm md:max-w-screen-sm w-full lg:max-w-screen-lg sm:max-w-screen-sm">  
-       <BlogSkeleton/> 
-       <BlogSkeleton/>   
-       <BlogSkeleton/>    
+          <div className="max-w-sm md:max-w-screen-sm w-full lg:max-w-screen-lg sm:max-w-screen-sm">   
+       <BlogSkeleton/>
+       <BlogSkeleton/>
+       <BlogSkeleton/>
         </div>
      </div>) :
    
@@ -33,8 +33,8 @@ export function Blogs(){
          Following
        </div> 
        </div>
-       <div className="max-w-sm md:max-w-screen-sm w-full lg:max-w-screen-lg sm:max-w-screen-sm">
-         {blogs.map((blog,index)=> <BlogCard key={index} id={blog.id} title={blog.title} content={blog.content} authorName={blog.author.name} publishDate={blog.date}/>)}
+       <div className="max-w-sm md:max-w-screen-sm w-full lg:max-w-screen-lg sm:max-w-screen-sm"> 
+         {blogs.map((blog,index)=> <BlogCard key={index} updatedOn={blog.updatedOn} id={blog.id} title={blog.title} content={blog.content} authorName={blog.author.name} publishDate={blog.date}/>)}
          
        </div>
        </div>
