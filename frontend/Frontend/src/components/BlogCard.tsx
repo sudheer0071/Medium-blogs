@@ -19,7 +19,7 @@ export const BlogCard = ({authorName,title,content,publishDate,id,updatedOn}:Blo
     <div className=" flex">
   <div className=" w-full py-4 cursor-pointer" onClick={()=> localStorage.setItem('id',id)}>
     <div className="flex justify-start">
-    <div className="">
+    <div className=" w-32">
      <Avatar size={5} name={authorName|| 'Annoymous'}/> {authorName}  
     </div>
     <div className=" flex justify-center flex-col pl-2">
