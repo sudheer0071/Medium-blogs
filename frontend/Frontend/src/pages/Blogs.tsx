@@ -8,6 +8,8 @@ export function Blogs(){
   // store it in state
   // stor it directly here
   const {loading, blogs} = useBlogs()
+  console.log(localStorage.getItem('token'));
+  
   return <div>
          <Appbar name={localStorage.getItem('name')} write={true} /> 
    <div className=" px-6"> 

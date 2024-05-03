@@ -2,8 +2,9 @@ import { useNavigate } from "react-router-dom"
 import { Blogs } from "../hooks"  
 import { Avatar } from "./BlogCard"
 import { FilePenLine } from 'lucide-react';
-export const ViewBlog = ({blog}:{blog: Blogs})=>{
-  console.log("blog updatedOn: " +blog.updatedOn);
+export const ViewBlog = ({blog}:{blog: Blogs})=>{ 
+  console.log("author name: "+blog.author.name);
+  console.log("author name on localstorage: "+localStorage.getItem('name'));
   
    const navigate = useNavigate()
   return  <div className=" flex justify-center">
