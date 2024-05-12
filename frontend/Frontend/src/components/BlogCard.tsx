@@ -9,11 +9,13 @@ interface BlogCardProps{
   content:string,
   publishDate:any,
   id:string
-  updatedOn?:any
+  updatedOn?:any,
+  imageUrl:any
 }
 
-export const BlogCard = ({authorName,title,content,publishDate,id,updatedOn}:BlogCardProps) =>{ 
+export const BlogCard = ({authorName,title,content,publishDate,id,updatedOn, imageUrl}:BlogCardProps) =>{ 
   console.log("updated on: "+typeof(updatedOn));
+  console.log("image url: "+imageUrl);
   
   return <Link to={`/blog/${id}`}>
     <div className=" flex">
@@ -57,7 +59,7 @@ export const BlogCard = ({authorName,title,content,publishDate,id,updatedOn}:Blo
     <div className=" bg-slate-100 h-px w-full"></div>
   </div>
   <div className="flex justify-center items-center pr-2 mb-5 w-28 max-w-sm md:px-4 lg:px-6 sm:px-10 sm:w-60 md:w-52">
-    <img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*TQlEMeYwwWc38Wqm7EfCTg.png" alt="" />
+    <img src={imageUrl} alt="" />
   </div>
     </div>
   </Link> 

@@ -27,6 +27,7 @@ model Blog {
   content   String
   published Boolean @default(false)
   date      DateTime
+  image    String?
   author      User?   @relation(fields: [authorId], references: [id])
   authorId    String? 
   updatedOn  DateTime?

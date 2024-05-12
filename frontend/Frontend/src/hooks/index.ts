@@ -7,7 +7,8 @@ import { BACKEND_URL } from "../config";
     id:string
     title: string
     content: string 
-    date: any
+    date: any,
+    image:string
     author: {
         name:string
     }

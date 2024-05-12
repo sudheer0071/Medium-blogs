@@ -9,7 +9,7 @@ export const Publish = () =>{
   const [content, setContent] = useState('')
   const [popup, setPopup] = useState("")
   const [isOpen, setIsopen] = useState(false) 
-  const [file, setFile] = useState<File | null>(null)
+  const [file, setFile] = useState<File | null>(null) 
   const navigate = useNavigate()
 
 
@@ -20,38 +20,45 @@ export const Publish = () =>{
   }
 
   const photoUpload = async (event:FormEvent<HTMLFormElement>)=>{ 
-    event.preventDefault()
-    if (!file) {
-      console.error("no file selected");
-      return
+    event.preventDefault()  
+    if (title==''||content==''||!file) {
+      console.log("emptyy"); 
+      setTimeout(() => {
+        setIsopen(false),
+        setPopup('')
+      }, 2000);
+      setIsopen(true),
+      setPopup('Please enter all feilds') 
     }
-    setIsopen(true)
-    setPopup('uploading...')
-    const formData = new FormData()
-    
-    formData.append('file',file) 
-    console.log("formdata: "+formData);
-    
-    const uploadFiles = formData.get('file') as File; 
-
-      const response = await axios.post(`${BACKEND_URL}/api/v1/blogs/upload`, 
-        {uploadFiles}
-      ,{
-        headers:{
-          'Content-Type': 'multipart/form-data',
+    else{
+      const formData = new FormData() 
+      formData.append('file',file)   
+      const uploadFiles = formData.get('file') as File; 
+      console.log("file: "+file);
+      
+      setIsopen(true)
+      setPopup('Creating...') 
+      const response = await axios.post(`${BACKEND_URL}/api/v1/blogs`,{
+         title,  content, uploadFiles
+      },{
+        headers:{  
+          "Content-Type":"multipart/form-data",
           authorization:localStorage.getItem('token')
         }
-      })
+      }) 
       setTimeout(() => {
-        setIsopen(false)
+        setIsopen(false),
         setPopup('')
-        setFile(null)
+        localStorage.setItem('id',response.data.blog.id)
+        navigate(`/blog/${response.data.blog.id}/`)
+        console.log("id: "+response.data.blog.id);
+        
       }, 2000);
-      setIsopen(true)
-      setPopup( response.data.message)
-      console.log("response: "+response.data.message);  
+      setIsopen(true),
+      setPopup(response.data.message) 
+    }      
   }
-
+ 
   return <div className="  "> 
   <div className="flex justify-center">
   <div className={`popup ${isOpen ? 'active' : 'hide'} ${popup.includes('feilds') || popup.includes('found')||popup.includes('wrong')||popup.includes('already')||popup.includes('Error')?'bg-red-400 p-2 h-10': ''} flex justify-center text-center w-80 shadow-slate-500 shadow-lg bg-green-500 rounded-lg font-medium text-lg fixed top-4 h-11 p-1`}>{popup}</div>
@@ -67,47 +74,15 @@ export const Publish = () =>{
   </div>
   <div className=" flex justify-center w-full pt-12">
   <div className=" max-w-sm md:max-w-screen-sm w-full lg:max-w-screen-lg sm:max-w-screen-sm">
-    {/* <TextEditor onchange={(e)=>{
+    <form onSubmit={photoUpload }>
+    <TextEditor onchange={(e)=>{
       setContent(e.target.value)
-    }}/>  */}
-      <form onSubmit={photoUpload}>
-        <input type="file" onChange={handleFileChange}  />
-        <button type="submit">Upload</button>
-      </form>
-    {/* <button onClick={async () => {    
-      if (title==''||content=='') {
-        console.log("emptyy"); 
-        setTimeout(() => {
-          setIsopen(false),
-          setPopup('')
-        }, 2000);
-        setIsopen(true),
-        setPopup('Please enter all feilds') 
-      }
-      else{
-        setIsopen(true)
-        setPopup('Creating...')
-        const response = await axios.post(`${BACKEND_URL}/api/v1/blogs`,{
-          title:title, content:content
-        },{
-          headers:{ 
-            authorization:localStorage.getItem('token')
-          }
-        }) 
-        setTimeout(() => {
-          setIsopen(false),
-          setPopup('')
-          localStorage.setItem('id',response.data.blog.id)
-          navigate(`/blog/${response.data.blog.id}/`)
-          console.log("id: "+response.data.blog.id);
-          
-        }, 2000);
-        setIsopen(true),
-        setPopup(response.data.message) 
-      }
-    }} type="submit" className="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-600 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-300 hover:bg-blue-800">
+    }}/> 
+        <input type="file" onChange={handleFileChange}  /> 
+    <button type="submit" className="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-600 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-300 hover:bg-blue-800">
          Publish post
-     </button> */}
+     </button>
+      </form>
   </div>
   </div>
 

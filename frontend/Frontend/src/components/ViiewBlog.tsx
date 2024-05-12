@@ -17,6 +17,9 @@ export const ViewBlog = ({blog}:{blog: Blogs})=>{
     {blog.updatedOn!=''?'Updated On '+blog.updatedOn:'Published on '+blog.date}
     {/* Published on {blog.date} */}
     </div>
+    <div className=" mt-8">
+      <img src={blog.image} alt="" />
+    </div>
     <div className=" pt-3 text-lg p">
     {blog.content}
     </div>

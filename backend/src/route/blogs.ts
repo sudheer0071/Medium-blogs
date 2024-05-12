@@ -40,23 +40,44 @@ blogRouter.post('/', async (c) => {
     datasourceUrl: c.env.DATABASE_URL,
 }).$extends(withAccelerate())
 
-const body = await c.req.json()   
+// const body = await c.req.json()   
 const authorId = c.get("userId")
 try {
   const photo = await c.req.parseBody()
-  console.log(photo['file']);
-  
+  console.log(photo);
+  console.log(typeof(photo.content));
+  console.log(photo.title);
+  const {title, content} = photo
+  let imageURL
+  const file = photo['uploadFiles'] as File 
+   
+    if (file && file instanceof File){
+      const key = `${new Date().getTime()}-${file.name}`
+      const fileBuffer = await file.arrayBuffer()
+       
+      await c.env.HONO_R2_UPLOAD.put(key, fileBuffer,{
+        httpMetadata:{
+          contentType: file.type || 'application/octet-stream'
+        }
+      })
+      console.log("Uploaded file to R2"); 
+      imageURL = `https://pub-8d1f155b774e4c888f22e2ea3f7a9d53.r2.dev/${key}`
+      console.log("image url: "+imageURL);
+       
+    }   
+ 
   const blog = await prisma.blog.create({
    data:{
-     title:body.title,
-     content:body.content, 
+     title:title,
+     content:content, 
      date: new Date(),
+     image:imageURL,
      authorId
     }
   })
  
 
- return c.json({message:`Blog is created`,blog})
+ return c.json({message:`Blog is created`,blog, imageURL})
  
 } catch (error) {
   console.error(error)
@@ -95,6 +116,7 @@ const blogs = await prisma.blog.findMany({
     id:true,
     date:true,
     updatedOn:true,
+    image:true,
     author:{
       select:{
         name:true
@@ -135,6 +157,7 @@ try {
       title:true, 
       content:true,
       date:true,
+      image:true,
       updatedOn:true,
       author:{
         select:{
@@ -204,24 +227,37 @@ try {
 }
 })  
 
-blogRouter.post('/upload',async(c)=>{
-  console.log("author id: "+c.get('userId'));
-  
+blogRouter.post('/upload',async(c)=>{  
   const photo = await c.req.parseBody()
 console.log(photo);
- 
+  
 const file = photo['uploadFiles'] as File
 // console.log(file.stream());
  
   if (file && file instanceof File){
-    console.log("Uploading file to R2"); 
-    await c.env.HONO_R2_UPLOAD.put(file.name, file)
+    const key = `${new Date().getTime()}-${file.name}`
+    const fileBuffer = await file.arrayBuffer()
+     
+    await c.env.HONO_R2_UPLOAD.put(key, fileBuffer,{
+      httpMetadata:{
+        contentType: file.type || 'application/octet-stream'
+      }
+    })
     console.log("Uploaded file to R2"); 
-  } 
-  const image = await c.env.HONO_R2_UPLOAD.get(file.name)
-  console.log(image);
-  
- return c.json({message:'File uploaded'})
+    const imageURL = `https://pub-8d1f155b774e4c888f22e2ea3f7a9d53.r2.dev/${key}`
+    console.log("image url: "+imageURL);
+    
+    return c.json({message:'File uploaded', imageURL})
+  }   
+  // console.log(image);     
 })
  
+blogRouter.get('/getImage',async(c)=>{
+  const body = await c.req.json()
+  const image = await c.env.HONO_R2_UPLOAD.get('MENTORx.png')
+  console.log(image);
+  c.json({image})
+  
+})
+
 export {blogRouter}

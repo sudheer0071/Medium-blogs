@@ -36,7 +36,7 @@ export function Blogs(){
        </div> 
        </div>
        <div className="max-w-sm md:max-w-screen-sm w-full lg:max-w-screen-lg sm:max-w-screen-sm"> 
-         {blogs.map((blog,index)=> <BlogCard key={index} updatedOn={blog.updatedOn} id={blog.id} title={blog.title} content={blog.content} authorName={blog.author.name} publishDate={blog.date}/>)}
+         {blogs.map((blog,index)=> <BlogCard key={index} imageUrl={blog.image} updatedOn={blog.updatedOn} id={blog.id} title={blog.title} content={blog.content} authorName={blog.author.name} publishDate={blog.date}/>)}
          
        </div>
        </div>
