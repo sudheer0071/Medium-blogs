@@ -61,6 +61,8 @@ const credentials = await prisma.user.findUnique({
   where:{email:body.email,password:body.password}
 })
 if (!exist) {
+  console.log("not found");
+  
 return c.json({message:"User not found"})
 }
 

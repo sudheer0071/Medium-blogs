@@ -1,6 +1,6 @@
 import axios from "axios"
 import { Appbar } from "../components/Appbar" 
-import { ChangeEvent, useState } from "react"
+import { ChangeEvent, FormEvent, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { BACKEND_URL } from "../config"
 
@@ -9,36 +9,48 @@ export const Publish = () =>{
   const [content, setContent] = useState('')
   const [popup, setPopup] = useState("")
   const [isOpen, setIsopen] = useState(false) 
-  // const [file, setFile] = useState<File | null>(null)
+  const [file, setFile] = useState<File | null>(null)
   const navigate = useNavigate()
 
 
-  // const handleFileChange = (event:ChangeEvent<HTMLInputElement>)=>{
-  //   if(event.target.files){
-  //     setFile(event.target.files[0])
-  //   }
-  // }
+  const handleFileChange = (event:ChangeEvent<HTMLInputElement>)=>{
+    if(event.target.files){
+      setFile(event.target.files[0])
+    }
+  }
 
-  // const photoUpload = async (event:FormEvent<HTMLFormElement>)=>{ 
-  //   event.preventDefault()
-  //   if (!file) {
-  //     console.error("no file selected");
-  //     return
-  //   }
-  //   const formData = new FormData()
+  const photoUpload = async (event:FormEvent<HTMLFormElement>)=>{ 
+    event.preventDefault()
+    if (!file) {
+      console.error("no file selected");
+      return
+    }
+    setIsopen(true)
+    setPopup('uploading...')
+    const formData = new FormData()
     
-  //   formData.append('file',file)
-  //   console.log("formdata: "+formData);
-  //     const response = await axios.post(`${BACKEND_URL}/api/v1/blogs/upload`, 
-  //       {formData}
-  //     ,{
-  //       headers:{
-  //         'Content-Type': 'multipart/form-data',
-  //         authorization:localStorage.getItem('token')
-  //       }
-  //     })
-  //     console.log("response: "+response.data); 
-  // }
+    formData.append('file',file) 
+    console.log("formdata: "+formData);
+    
+    const uploadFiles = formData.get('file') as File; 
+
+      const response = await axios.post(`${BACKEND_URL}/api/v1/blogs/upload`, 
+        {uploadFiles}
+      ,{
+        headers:{
+          'Content-Type': 'multipart/form-data',
+          authorization:localStorage.getItem('token')
+        }
+      })
+      setTimeout(() => {
+        setIsopen(false)
+        setPopup('')
+        setFile(null)
+      }, 2000);
+      setIsopen(true)
+      setPopup( response.data.message)
+      console.log("response: "+response.data.message);  
+  }
 
   return <div className="  "> 
   <div className="flex justify-center">
@@ -55,14 +67,14 @@ export const Publish = () =>{
   </div>
   <div className=" flex justify-center w-full pt-12">
   <div className=" max-w-sm md:max-w-screen-sm w-full lg:max-w-screen-lg sm:max-w-screen-sm">
-    <TextEditor onchange={(e)=>{
+    {/* <TextEditor onchange={(e)=>{
       setContent(e.target.value)
-    }}/> 
-      {/* <form onSubmit={photoUpload}>
-        <input type="file" id="myFile" name="filename"  onChange={handleFileChange}  />
+    }}/>  */}
+      <form onSubmit={photoUpload}>
+        <input type="file" onChange={handleFileChange}  />
         <button type="submit">Upload</button>
-      </form> */}
-    <button onClick={async () => {    
+      </form>
+    {/* <button onClick={async () => {    
       if (title==''||content=='') {
         console.log("emptyy"); 
         setTimeout(() => {
@@ -95,7 +107,7 @@ export const Publish = () =>{
       }
     }} type="submit" className="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-600 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-300 hover:bg-blue-800">
          Publish post
-     </button>
+     </button> */}
   </div>
   </div>
 

@@ -2,16 +2,16 @@ import { Hono } from "hono";
 import { Prisma, PrismaClient } from '@prisma/client/edge'
 import { withAccelerate } from '@prisma/extension-accelerate'
 import {decode, sign, verify} from 'hono/jwt'
-import {format} from 'date-fns'
+import {format} from 'date-fns'   
 
 const blogRouter = new Hono<{
   Bindings:{
     DATABASE_URL:string,
     JWT_SECRET:string,
-    HONO_R2_UPLOAD:R2Bucket
+    HONO_R2_UPLOAD:R2Bucket 
   },
   Variables:{
-    userId:string
+    userId:string, 
   }
 }>() 
 blogRouter.use('/*',async(c,next)=>{
@@ -208,14 +208,20 @@ blogRouter.post('/upload',async(c)=>{
   console.log("author id: "+c.get('userId'));
   
   const photo = await c.req.parseBody()
-  const file = photo['formData'] 
-  console.log("Files "+file);
-  
+console.log(photo);
+ 
+const file = photo['uploadFiles'] as File
+// console.log(file.stream());
+ 
   if (file && file instanceof File){
     console.log("Uploading file to R2"); 
-  }
+    await c.env.HONO_R2_UPLOAD.put(file.name, file)
+    console.log("Uploaded file to R2"); 
+  } 
+  const image = await c.env.HONO_R2_UPLOAD.get(file.name)
+  console.log(image);
   
- return c.json({message:photo})
+ return c.json({message:'File uploaded'})
 })
  
 export {blogRouter}

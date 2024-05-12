@@ -32,7 +32,7 @@ const navigate = useNavigate()
       setLoader(true)
       console.log("name: "+postInputs.name);
       console.log("email: "+postInputs.email);
-      console.log("password: "+postInputs.password);
+      console.log("password: "+postInputs.password); 
       
       const res = await axios.post(`${BACKEND_URL}/api/v1/users/${type=='signin'?'signin':'signup'}`,{
        name:postInputs.name,
